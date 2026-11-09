@@ -259,24 +259,34 @@ function renderImageStudio(container) {
                         <textarea id="imagePromptInput" rows="4" placeholder="Portrait of a luxury fashion model in pastel blush silk dress, natural lighting, ultra sharp details..." class="w-full p-3.5 rounded-2xl border border-shin-border focus:border-shin-rose focus:outline-none text-sm bg-shin-blush/20 resize-none"></textarea>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="space-y-3">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1">Artistic Style</label>
-                            <select id="imageStyleSelect" class="w-full p-2.5 rounded-xl border border-shin-border text-xs bg-white">
-                                <option>Photorealistic human characters</option>
-                                <option>Pixar-inspired 3D animation</option>
-                                <option>Japanese anime movie style</option>
-                                <option>Cinematic animated storytelling</option>
-                                <option>Realistic romantic movie scenes</option>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">AI Image Model</label>
+                            <select id="imageModelSelect" class="w-full p-2.5 rounded-xl border border-shin-border text-xs bg-white">
+                                <option value="black-forest-labs/FLUX.1-schnell">black-forest-labs/FLUX.1-schnell (FLUX)</option>
+                                <option value="stabilityai/stable-diffusion-xl-base-1.0">stabilityai/stable-diffusion-xl-base-1.0 (SDXL)</option>
+                                <option value="runwayml/stable-diffusion-v1-5">runwayml/stable-diffusion-v1-5 (SD 1.5)</option>
                             </select>
                         </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1">Aspect Ratio</label>
-                            <select id="imageAspectSelect" class="w-full p-2.5 rounded-xl border border-shin-border text-xs bg-white">
-                                <option value="16:9">16:9 (Cinematic)</option>
-                                <option value="9:16">9:16 (Stories/Reels)</option>
-                                <option value="1:1">1:1 (Square)</option>
-                            </select>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">Artistic Style</label>
+                                <select id="imageStyleSelect" class="w-full p-2.5 rounded-xl border border-shin-border text-xs bg-white">
+                                    <option>Photorealistic human characters</option>
+                                    <option>Pixar-inspired 3D animation</option>
+                                    <option>Japanese anime movie style</option>
+                                    <option>Cinematic animated storytelling</option>
+                                    <option>Realistic romantic movie scenes</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">Aspect Ratio</label>
+                                <select id="imageAspectSelect" class="w-full p-2.5 rounded-xl border border-shin-border text-xs bg-white">
+                                    <option value="16:9">16:9 (Cinematic)</option>
+                                    <option value="9:16">9:16 (Stories/Reels)</option>
+                                    <option value="1:1">1:1 (Square)</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
@@ -330,34 +340,59 @@ function renderImageStudio(container) {
         const prompt = document.getElementById("imagePromptInput").value;
         const style = document.getElementById("imageStyleSelect").value;
         const aspectRatio = document.getElementById("imageAspectSelect").value;
+        const model = document.getElementById("imageModelSelect").value;
 
         if (!prompt.trim()) return alert("Please enter an image prompt.");
 
         const badge = document.getElementById("imageStatusBadge");
-        badge.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-shin-rose"></i> Generating...`;
+        const imgContainer = document.getElementById("imagePreviewContainer");
+        const dlBtn = document.getElementById("imageDownloadBtn");
+
+        badge.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-shin-rose"></i> Generating AI Image...`;
 
         try {
             const res = await fetch("/api/image/generate", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ prompt, style, aspectRatio })
+                body: JSON.stringify({ prompt, style, aspectRatio, model })
             });
             const data = await res.json();
-            if (data.success) {
-                const imgContainer = document.getElementById("imagePreviewContainer");
-                imgContainer.innerHTML = `<img src="${data.image.imageUrl}" class="w-full h-full object-contain rounded-xl">`;
-                const dlBtn = document.getElementById("imageDownloadBtn");
+
+            if (data.success && data.image) {
+                imgContainer.innerHTML = `
+                    <img src="${data.image.imageUrl}" alt="${prompt}" class="w-full h-full object-contain rounded-xl shadow-inner">
+                `;
                 dlBtn.href = data.image.imageUrl;
                 dlBtn.classList.remove("hidden");
-                badge.innerText = "Completed";
-                document.getElementById("imageMetaText").innerText = `Render: ${data.image.provider} • ${style}`;
+                badge.innerHTML = `<span class="text-emerald-600 font-bold"><i class="fa-solid fa-check"></i> Generated</span>`;
+                document.getElementById("imageMetaText").innerText = `Model: ${data.image.model || model} • ${style}`;
             } else {
-                badge.innerText = "Error";
-                alert(data.message || "Image generation failed.");
+                badge.innerHTML = `<span class="text-red-500 font-bold"><i class="fa-solid fa-circle-exclamation"></i> Failed</span>`;
+                imgContainer.innerHTML = `
+                    <div class="text-left p-6 space-y-3 max-w-md bg-white/90 rounded-2xl border border-red-200 shadow-sm">
+                        <div class="flex items-center gap-2 text-red-600 font-bold text-sm">
+                            <i class="fa-solid fa-circle-xmark text-base"></i>
+                            <span>Generation Unsuccessful</span>
+                        </div>
+                        <p class="text-xs text-gray-700 leading-relaxed">${data.message || "Could not generate image."}</p>
+                        ${data.requiresToken ? `
+                            <button onclick="document.getElementById('openSettingsModalBtn').click()" class="luxury-btn text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+                                <i class="fa-solid fa-gear"></i> Open Engine Settings
+                            </button>
+                        ` : `
+                            <p class="text-[11px] text-gray-500">Check model access or verify your Hugging Face token in Engine Settings.</p>
+                        `}
+                    </div>
+                `;
             }
         } catch (err) {
-            badge.innerText = "Failed";
-            alert("Network error: " + err.message);
+            badge.innerHTML = `<span class="text-red-500 font-bold">Error</span>`;
+            imgContainer.innerHTML = `
+                <div class="text-center p-6 space-y-2 text-red-600">
+                    <i class="fa-solid fa-triangle-exclamation text-3xl"></i>
+                    <p class="text-xs font-semibold">Network or server error: ${err.message}</p>
+                </div>
+            `;
         }
     };
 }
