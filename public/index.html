@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHIN MOTION AI 🎀 | Luxury AI Creative Universe</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        shin: {
+                            pink: '#FFE4E9',
+                            blush: '#FFF0F3',
+                            rose: '#E86A92',
+                            darkRose: '#C84B73',
+                            black: '#121214',
+                            charcoal: '#22252A',
+                            softDark: '#1E1E24',
+                            border: 'rgba(232, 106, 146, 0.2)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FAF6F8;
+            color: #22252A;
+            overflow-x: hidden;
+        }
+        .luxury-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(232, 106, 146, 0.18);
+            box-shadow: 0 10px 30px -10px rgba(232, 106, 146, 0.12);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .luxury-card:hover {
+            box-shadow: 0 20px 35px -10px rgba(232, 106, 146, 0.22);
+            border-color: rgba(232, 106, 146, 0.4);
+        }
+        .luxury-btn {
+            background: linear-gradient(135deg, #E86A92 0%, #C84B73 100%);
+            color: #FFFFFF;
+            font-weight: 600;
+            transition: all 0.25s ease;
+        }
+        .luxury-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px -4px rgba(232, 106, 146, 0.45);
+        }
+        .luxury-btn-dark {
+            background: #121214;
+            color: #FFFFFF;
+            transition: all 0.25s ease;
+        }
+        .luxury-btn-dark:hover {
+            background: #252830;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+        }
+        .studio-nav-btn.active {
+            background: linear-gradient(135deg, #121214 0%, #20232A 100%);
+            color: #FFFFFF;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+        .studio-nav-btn.active .nav-icon {
+            color: #FFB6C1;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFF0F3;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E86A92;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <!-- Top Luxury Navigation Header -->
+    <header class="bg-shin-black text-white px-6 py-3 border-b border-shin-border sticky top-0 z-50 flex items-center justify-between shadow-md">
+        <div class="flex items-center space-x-4">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-shin-rose to-shin-pink flex items-center justify-center text-shin-black font-serif font-black text-xl shadow-inner">
+                🎀
+            </div>
+            <div>
+                <h1 class="font-serif font-bold text-lg tracking-wider text-shin-pink flex items-center gap-2">
+                    SHIN MOTION AI
+                    <span class="text-[10px] font-sans font-semibold uppercase px-2 py-0.5 rounded-full bg-shin-rose/20 text-shin-pink border border-shin-rose/30">Luxe v2.0</span>
+                </h1>
+                <p class="text-xs text-gray-400 font-light">All-in-One Premium AI Creative Universe</p>
+            </div>
+        </div>
+
+        <!-- Global Project Selector & Engine Status -->
+        <div class="flex items-center space-x-4">
+            <div class="hidden md:flex items-center bg-shin-charcoal/80 px-3 py-1.5 rounded-full border border-gray-700 text-xs text-gray-300">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
+                Active Project: <span id="headerActiveProjectName" class="font-semibold text-white ml-1">Sakura Blossom Story</span>
+            </div>
+
+            <button id="openSettingsModalBtn" class="px-3.5 py-1.5 rounded-full bg-shin-charcoal text-xs font-medium text-shin-pink hover:text-white border border-gray-700 hover:border-shin-rose transition flex items-center gap-1.5">
+                <i class="fa-solid fa-sliders"></i>
+                <span>API Settings</span>
+            </button>
+
+            <a href="https://github.com" target="_blank" class="text-gray-400 hover:text-shin-pink transition text-sm">
+                <i class="fa-brands fa-github"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar Navigation: 10 Dedicated Studios -->
+        <aside class="w-64 bg-white border-r border-shin-border flex flex-col justify-between p-4 shadow-sm select-none overflow-y-auto">
+            <div class="space-y-6">
+                <div>
+                    <span class="text-[11px] font-bold tracking-widest uppercase text-gray-400 px-3">Creative Studios</span>
+                    <nav class="mt-2 space-y-1" id="studiosNav">
+                        <button data-studio="dashboard" class="studio-nav-btn active w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium text-shin-charcoal hover:bg-shin-blush transition">
+                            <span class="flex items-center gap-3">
+                                <i class="nav-icon fa-solid fa-compass text-shin-rose w-4 text-center"></i>
+                                <span>Overview & Home</span>
+                            </span>
+                        </button>
+
+                        <button data-studio="image" class="studio-nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium text-shin-charcoal hover:bg-shin-blush transition">
+                            <span class="flex items-center gap-3">
+                                <i class="nav-icon fa-solid fa-wand-magic-sparkles text-shin-rose w-4 text-center"></i>
+                                <span>AI Image Studio</span>
+                            </span>
+                            <span class="text-[10px] bg-shin-pink text-shin-darkRose px-2 py-0.5 rounded-full font-bold">FLUX</span>
+                        </button>
+
+                        <button data-studio="video" class="studio-nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium text-shin-charcoal hover:bg-shin-blush transition">
+                            <span class="flex items-center gap-3">
+                                <i class="nav-icon fa-solid fa-clapperboard text-shin-rose w-4 text-center"></i>
+                                <span>AI Video Studio</span>
+                            </span>
+                            <span class="text-[10px] bg-shin-black text-shin-pink px-2 py-0.5 rounded-full font-bold">Pixar</span>
+                        </button>
+
+                        <button data-studio="character" class="studio-nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium text-shin-charcoal hover:bg-shin-blush transition">
+                            <span class="flex items-center gap-3">
+                                <i class="nav-icon fa-solid fa-user-astronaut text-shin-rose w-4 text-center"></i>
+                                <span>AI Character Studio</span>
+                            </span>
+                        </button>
+
+                        <button data-studio="voice" class="studio-nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium text-shin-charcoal hover:bg-shin-blush transition">
+                            <span class="flex items-center gap-3">
+                                <i class="nav-icon fa-solid fa-microphone-lines text-shin-rose w-4 text-center"></i>
+                                <span>AI Voice Studio</span>
+                            </span>
+                        </button>
+
+                        <button data-studio="hyperframes" class="studio-nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium text-shin-charcoal hover:bg-shin-blush transition">
+                            <span class="flex items-center gap-3">
+                                <i class="nav-icon fa-solid fa-bolt text-shin-rose w-4 text-center"></i>
+                                <span>Hyper Frames</span>
+                            </span>
+                        </button>
+
+                        <button data-studio="editor" class="studio-nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium text-shin-charcoal hover:bg-shin-blush transition">
+                            <span class="flex items-center gap-3">
+                                <i class="nav-icon fa-solid fa-scissors text-shin-rose w-4 text-center"></i>
+                                <span>FFmpeg Editor</span>
+                            </span>
+                        </button>
+
+                        <button data-studio="whisper" class="studio-nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium text-shin-charcoal hover:bg-shin-blush transition">
+                            <span class="flex items-center gap-3">
+                                <i class="nav-icon fa-solid fa-closed-captioning text-shin-rose w-4 text-center"></i>
+                                <span>Whisper Captions</span>
+                            </span>
+                        </button>
+
+                        <button data-studio="research" class="studio-nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium text-shin-charcoal hover:bg-shin-blush transition">
+                            <span class="flex items-center gap-3">
+                                <i class="nav-icon fa-solid fa-magnifying-glass-chart text-shin-rose w-4 text-center"></i>
+                                <span>Video Research</span>
+                            </span>
+                        </button>
+                    </nav>
+                </div>
+
+                <div>
+                    <span class="text-[11px] font-bold tracking-widest uppercase text-gray-400 px-3">Management & Media</span>
+                    <nav class="mt-2 space-y-1">
+                        <button data-studio="projects" class="studio-nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-shin-charcoal hover:bg-shin-blush transition">
+                            <i class="nav-icon fa-solid fa-folder-open text-shin-rose w-4 text-center"></i>
+                            <span>My Projects</span>
+                        </button>
+                        <button data-studio="history" class="studio-nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-shin-charcoal hover:bg-shin-blush transition">
+                            <i class="nav-icon fa-solid fa-cloud-arrow-down text-shin-rose w-4 text-center"></i>
+                            <span>Downloads & History</span>
+                        </button>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- User Status Card -->
+            <div class="pt-4 border-t border-shin-border">
+                <div class="bg-gradient-to-r from-shin-blush to-shin-pink/50 p-3 rounded-2xl flex items-center gap-3 border border-shin-rose/20">
+                    <div class="w-8 h-8 rounded-full bg-shin-black text-white flex items-center justify-center font-bold text-xs">
+                        SM
+                    </div>
+                    <div class="overflow-hidden">
+                        <p class="text-xs font-bold text-shin-charcoal truncate">Sakura Motion AI</p>
+                        <p class="text-[10px] text-gray-500 flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Pro Subscription
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Dynamic Content Canvas -->
+        <main class="flex-1 overflow-y-auto p-6 md:p-8 bg-[#FAF6F8]" id="mainContentArea">
+            <!-- Studio Sections Render Here Dynamically Via JS -->
+        </main>
+    </div>
+
+    <!-- API Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 bg-shin-black/60 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-white w-full max-w-lg rounded-3xl p-6 md:p-8 border border-shin-border shadow-2xl relative">
+            <button id="closeSettingsModalBtn" class="absolute top-5 right-5 text-gray-400 hover:text-shin-charcoal text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-2xl bg-shin-pink flex items-center justify-center text-shin-darkRose text-lg">
+                    <i class="fa-solid fa-gear"></i>
+                </div>
+                <div>
+                    <h3 class="font-serif font-bold text-xl text-shin-charcoal">Studio Engine Settings</h3>
+                    <p class="text-xs text-gray-500">Configure Hugging Face and production credentials</p>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">Hugging Face API Token</label>
+                    <input type="password" id="hfTokenInput" placeholder="hf_xxxxxxxxxxxxxxxxxxxxxxxxx" class="w-full px-4 py-3 rounded-xl border border-shin-border focus:border-shin-rose focus:outline-none text-sm font-mono bg-shin-blush/30">
+                    <p class="text-[11px] text-gray-500 mt-1">Stored securely in server storage. Used for FLUX.1 Schnell image generation.</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">Default Image Model</label>
+                    <input type="text" id="defaultImageModelInput" value="black-forest-labs/FLUX.1-schnell" class="w-full px-4 py-2.5 rounded-xl border border-shin-border text-sm">
+                </div>
+
+                <div class="p-3 bg-shin-blush rounded-xl border border-shin-rose/30 text-xs text-gray-600 space-y-1">
+                    <p class="font-bold text-shin-darkRose"><i class="fa-solid fa-circle-info mr-1"></i> Cost & Provider Transparency</p>
+                    <p>• Hugging Face FLUX.1 Schnell inference runs on free-tier or user API tokens without surprise costs.</p>
+                    <p>• Neural Edge-TTS voice generation and Whisper transcribing run with free open-source engines.</p>
+                </div>
+
+                <div class="pt-4 flex justify-end gap-3">
+                    <button id="saveSettingsBtn" class="luxury-btn px-6 py-2.5 rounded-xl text-sm font-semibold">
+                        Save Configurations
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Frontend Core Application Logic -->
+    <script src="/app.js"></script>
+</body>
+</html>
