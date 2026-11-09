@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: shin-motion-ai
+    env: node
+    plan: free
+    buildCommand: "cd backend && npm install && pip install edge-tts openai-whisper rembg onnxruntime pillow"
+    startCommand: "cd backend && node server.js"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+    disk:
+      name: shin-motion-storage
+      mountPath: /opt/render/project/src/backend/uploads
+      sizeGB: 1
