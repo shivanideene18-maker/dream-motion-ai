@@ -184,29 +184,42 @@ app.post("/api/image/generate", async (req, res) => {
 
         const db = storage.loadDB();
         const hf = getHFClient();
-        const chosenModel = model || db.settings.defaultImageModel;
+        const chosenModel = model || db.settings.defaultImageModel || "black-forest-labs/FLUX.1-schnell";
 
-        let imageUrl = "";
-        let usedProvider = "huggingface";
-
-        if (hf) {
-            try {
-                const enrichedPrompt = `${prompt}, ${style}, ultra high quality, masterpiece, 8k resolution, cinematic lighting`;
-                const imgResult = await hf.textToImage({
-                    model: chosenModel,
-                    inputs: enrichedPrompt
-                });
-                const buffer = Buffer.from(await imgResult.arrayBuffer());
-                imageUrl = `data:image/png;base64,${buffer.toString("base64")}`;
-            } catch (hfErr) {
-                console.warn("Hugging Face API call failed or rate-limited, generating procedural preview:", hfErr.message);
-                imageUrl = generateProceduralLuxuryImage(prompt, style, aspectRatio);
-                usedProvider = "procedural_fallback";
-            }
-        } else {
-            imageUrl = generateProceduralLuxuryImage(prompt, style, aspectRatio);
-            usedProvider = "procedural_engine";
+        if (!hf) {
+            return res.status(400).json({
+                success: false,
+                requiresToken: true,
+                message: "A Hugging Face API Token is required to generate real AI images. Please click 'Engine Settings' in the top right to configure your Hugging Face Token (hf_...)."
+            });
         }
+
+        const enrichedPrompt = `${prompt}, ${style}, ultra high quality, masterpiece, 8k resolution, cinematic lighting`;
+
+        let imgResult;
+        try {
+            imgResult = await hf.textToImage({
+                model: chosenModel,
+                inputs: enrichedPrompt
+            });
+        } catch (hfErr) {
+            console.error("Hugging Face API error:", hfErr);
+            const errMsg = hfErr.message || "Failed to generate image via Hugging Face API.";
+            return res.status(502).json({
+                success: false,
+                provider: "huggingface",
+                model: chosenModel,
+                message: `Hugging Face generation error: ${errMsg}. Please ensure your API token is valid and has access to model '${chosenModel}'.`
+            });
+        }
+
+        const buffer = Buffer.from(await imgResult.arrayBuffer());
+        const filename = `img_${Date.now()}_${uuidv4().slice(0, 6)}.png`;
+        const filepath = path.join(storage.UPLOADS_DIR, filename);
+        fs.writeFileSync(filepath, buffer);
+
+        const relativeUrl = `/uploads/${filename}`;
+        const base64Url = `data:image/png;base64,${buffer.toString("base64")}`;
 
         const record = {
             id: `img_${Date.now()}_${uuidv4().slice(0, 6)}`,
@@ -214,8 +227,9 @@ app.post("/api/image/generate", async (req, res) => {
             style,
             aspectRatio,
             model: chosenModel,
-            provider: usedProvider,
-            imageUrl,
+            provider: "huggingface",
+            imageUrl: relativeUrl,
+            previewUrl: base64Url,
             createdAt: new Date().toISOString()
         };
 
@@ -227,7 +241,7 @@ app.post("/api/image/generate", async (req, res) => {
             image: record
         });
     } catch (err) {
-        console.error("Image generation error:", err);
+        console.error("Image generation fatal error:", err);
         res.status(500).json({ success: false, message: err.message });
     }
 });
