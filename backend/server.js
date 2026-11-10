@@ -754,23 +754,4 @@ app.delete("/api/projects/:id", (req, res) => {
     storage.saveDB(db);
     res.json({ success: true, message: "Project deleted." });
 });
-
-app.get("/api/history", (req, res) => {
-    const db = storage.loadDB();
-    res.json({
-        success: true,
-        history: {
-            images: db.generations.images,
-            videos: db.generations.videos,
-            voices: db.generations.voices,
-            captions: db.generations.captions,
-            hyperFrames: db.generations.hyperFrames,
-            editorJobs: db.generations.editorJobs
-        }
-    });
-});
-
-// Start express server
-app.listen(PORT, () => {
-    console.log(`✨ SHIN MOTION AI Universe running on http://localhost:${PORT}`);
-});
+c
