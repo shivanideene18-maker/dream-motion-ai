@@ -69,13 +69,14 @@ function getHFClient() {
 app.get("/api/status", (req, res) => {
     const db = storage.loadDB();
     const hasToken = Boolean(db.settings?.hfToken || process.env.HF_TOKEN);
+    const { hfToken, ...safeSettings } = db.settings || {};
     res.json({
         success: true,
         brand: "SHIN MOTION AI",
         tagline: "Your All-in-One Premium AI Creative Universe",
         version: "2.0.0-cinematic",
         hfConnected: hasToken,
-        settings: db.settings,
+        settings: safeSettings,
         stats: {
             charactersCount: db.characters.length,
             projectsCount: db.projects.length,
@@ -84,7 +85,6 @@ app.get("/api/status", (req, res) => {
         }
     });
 });
-
 app.post("/api/settings", (req, res) => {
     const { hfToken, defaultImageModel, defaultVideoModel } = req.body;
     const db = storage.loadDB();
